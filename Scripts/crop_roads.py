@@ -57,8 +57,8 @@ for img_name in indices:
     
     for index, (b, t) in enumerate(zip(bottom, top)):
         
-        cropped_img = img.crop((0, int(t), width, int(b)))
-        cropped_label = label.crop((0, int(t), width, int(b)))
+        cropped_img = img.crop((0, int(t), 256, int(b)))
+        cropped_label = label.crop((0, int(t), 256, int(b)))
         new_name = '{}:{}'.format(os.path.splitext(img_name)[0], index)
 
         if idx % 3 != 0:
@@ -73,10 +73,10 @@ for img_name in indices:
             desc_label_dir = valannot_dir
             
         with open(dataset_dir + desc_txt, 'a') as txt:
-            txt.write(desc_image_dir  + '.png'.format(new_name) + ' ' + desc_label_dir + '.png'.format(new_name) + '\n')
+            txt.write(desc_image_dir  + '{}.png'.format(new_name) + ' ' + desc_label_dir + '{}.png'.format(new_name) + '\n')
             
-        cropped_img.save(desc_image_dir  + '.png'.format(new_name))
-        cropped_label.save(desc_label_dir + '.png'.format(new_name))
+        cropped_img.save(desc_image_dir  + '{}.png'.format(new_name))
+        cropped_label.save(desc_label_dir + '{}.png'.format(new_name))
         
 
 roads_mean /= num_roads
