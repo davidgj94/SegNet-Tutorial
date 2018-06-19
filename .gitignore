@@ -1,1 +1,8 @@
 *.caffemodel
+roads/
+results/
+*.solverstate
+*.caffemodel
+*.pyc
+*.png
+
