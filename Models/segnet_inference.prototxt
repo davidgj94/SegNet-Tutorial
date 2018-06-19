@@ -5,7 +5,7 @@ layer {
   top: "data"
   top: "label"
   dense_image_data_param {
-    source: "/home/david/projects/SegNet-Tutorial/roads/ROADS/train.txt"	# Change this to the absolute path to your data file
+    source: "/home/david/projects/SegNet-Tutorial/roads/ROADS/val.txt"	# Change this to the absolute path to your data file
     batch_size: 1
   }
 }
@@ -1523,7 +1523,7 @@ layer {
 layer {
   bottom: "conv1_2_D"
   top: "conv1_1_D"
-  name: "conv1_1_D"
+  name: "conv1_1_D_roads"
   type: "Convolution"
   param {
     lr_mult: 1
