@@ -5,59 +5,66 @@ import os
 from pathlib import Path
 import shutil
 import random
+import pdb
 
 def print_label_freqs(split, label_freqs):
     print split
     for idx, freq in enumerate(label_freqs):
         print '>>>', 'Class {} freq:'.format(idx), freq
 
-def get_label_freqs(label):
-    cls_freq = []
+def get_label_counts(label, num_classes):
+    cls_count = np.zeros(num_classes)
     label_v = np.array(label).flatten()
     num_cls = np.unique(label_v).size
 
     for i in range(num_cls):
-        cls_num.append(len(np.where(train_labels==i)[0]))
+        cls_count[i] = len(np.where(label_v==i)[0])
 
-    cls_freq = np.array(cls_freq)
-    cls_freq = cls_freq / np.sum(cls_freq)
-
-    return v
+    return cls_count, np.sum(cls_count)
     
     
 def crop_roads(crop_height, crop_step, indices, desc_txt, desc_image_dir, desc_label_dir):
     
-    label_freqs = []
-    
+    label_counts = np.zeros(4)
+    num_pixels = 0
+   
     for img_name in indices:
     
-    image_dir = png_images_dir + img_name 
-    label_dir = segmentation_class_raw_dir + img_name 
-    img = Image.open(image_dir)
-    label = Image.open(label_dir)
-    
-    label_freqs.append(get_label_freqs(img,label))
-    
-    width, height = img.size   # Get dimensions
-    bottom = np.arange(crop_height, height, crop_step)
-    top = bottom - crop_height
-    
-    for index, (b, t) in enumerate(zip(bottom, top)):
+        image_dir = png_images_dir + img_name 
+        label_dir = segmentation_class_raw_dir + img_name 
+        img = Image.open(image_dir)
+        label = Image.open(label_dir)
         
-        cropped_img = img.crop((0, int(t), 256, int(b)))
-        cropped_label = label.crop((0, int(t), 256, int(b)))
-        new_name = '{}:{}'.format(os.path.splitext(img_name)[0], index)
-            
-        with open(dataset_dir + desc_txt, 'a') as txt:
-            txt.write(desc_image_dir  + '{}.png'.format(new_name) + ' ' + desc_label_dir + '{}.png'.format(new_name) + '\n')
-            
-        cropped_img.save(desc_image_dir  + '{}.png'.format(new_name))
-        cropped_label.save(desc_label_dir + '{}.png'.format(new_name))
+        label_counts_, num_pixels_ = get_label_counts(label, len(label_counts))
+        #pdb.set_trace()
+        label_counts += label_counts_
+        num_pixels += num_pixels_
         
+        width, height = img.size   # Get dimensions
+        bottom = np.arange(crop_height, height, crop_step)
+        top = bottom - crop_height
+        
+        for index, (b, t) in enumerate(zip(bottom, top)):
+            
+            cropped_img = img.crop((0, int(t), 256, int(b)))
+            cropped_label = label.crop((0, int(t), 256, int(b)))
+            new_name = '{}:{}'.format(os.path.splitext(img_name)[0], index)
+                
+            with open(dataset_dir + desc_txt, 'a') as txt:
+                txt.write(desc_image_dir  + '{}.png'.format(new_name) + ' ' + desc_label_dir + '{}.png'.format(new_name) + '\n')
+                
+            cropped_img.save(desc_image_dir  + '{}.png'.format(new_name))
+            cropped_label.save(desc_label_dir + '{}.png'.format(new_name))
+    
+    label_freqs = label_counts / num_pixels
+
     return label_freqs
 
 
 labeled_roads = sys.argv[1]
+crop_height = int(sys.argv[2])
+crop_step = int(sys.argv[3])
+
 png_images_dir = labeled_roads + 'PNGImages/'
 segmentation_class_raw_dir = labeled_roads + 'SegmentationClassRaw/'
 
@@ -72,6 +79,7 @@ testannot_dir = dataset_dir + 'testannot/'
 
 if os.path.exists(dataset_dir):
     shutil.rmtree(dataset_dir, ignore_errors=True)
+
 os.makedirs(dataset_dir)
 os.makedirs(val_dir)
 os.makedirs(valannot_dir)
@@ -82,9 +90,6 @@ os.makedirs(testannot_dir)
 os.mknod(dataset_dir + 'train.txt')
 os.mknod(dataset_dir + 'val.txt')
 os.mknod(dataset_dir + 'test.txt')
-
-crop_height = int(sys.argv[2])
-crop_step = int(sys.argv[3])
 
 p = Path(png_images_dir)
 indices = [glob.parts[-1] for glob in p.glob('*.png')]
