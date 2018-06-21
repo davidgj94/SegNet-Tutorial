@@ -3,14 +3,7 @@ import os
 import numpy as np
 from skimage.io import ImageCollection
 from argparse import ArgumentParser
-
-
-
-
-caffe_root = '/home/david/projects/caffe-segnet-cudnn5/' 			# Change this to the absolute directoy to SegNet Caffe
 import sys
-sys.path.insert(0, caffe_root + 'python')
-
 import caffe
 from caffe.proto import caffe_pb2
 from google.protobuf import text_format
@@ -160,10 +153,10 @@ def make_parser():
 
 def make_parser_v2():
     p = ArgumentParser()
-    p.add_argument('train_model')
-    p.add_argument('weights_dir')
-    p.add_argument('out_dir')
-    p.add_argument('last_iter', type=int, default=0)
+    p.add_argument('--train_model')
+    p.add_argument('--weights_dir')
+    p.add_argument('--out_dir')
+    p.add_argument('--last_iter', type=int, default=0)
     return p
 
 def create_weights(train_model, weights, out_dir):
@@ -211,6 +204,6 @@ if __name__ == '__main__':
     states = states[args.last_iter:]
     
     for state in states:
-        iter_name = os.path.splitext(glob.parts[-1])[0]
-        create_weights(args.train_model, os.path.join(args.weights_dir, .parts[-1]), os.path.join(args.out_dir, iter_name))
+        iter_name = os.path.splitext(state.parts[-1])[0]
+        create_weights(args.train_model, os.path.join(args.weights_dir, state.parts[-1]), os.path.join(args.out_dir, iter_name))
     

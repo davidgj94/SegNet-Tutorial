@@ -1,5 +1,4 @@
 from __future__ import division
-import caffe
 import numpy as np
 import os
 import sys
@@ -16,7 +15,7 @@ def fast_hist(a, b, n):
     k = (a >= 0) & (a < n)
     return np.bincount(n * a[k].astype(int) + b[k], minlength=n**2).reshape(n, n)
 
-def compute_hist(net, save_dir, imgs_path, layer='prob', gt='label'):
+def compute_hist(net, imgs_path, save_dir=None, layer='prob', gt='label'):
     
     if save_dir:
         shutil.rmtree(save_dir, ignore_errors=True)
