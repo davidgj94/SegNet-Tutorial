@@ -12,7 +12,7 @@ cd $WORK_DIR
 
 "${CAFFE_DIR}"/caffe train -gpu 0 -solver "${SEGNET_TUTORIAL_DIR}"/Models/segnet_solver.prototxt -snapshot "${SEGNET_TUTORIAL_DIR}"/Training/$1/$1_iter_$2.solverstate -iterations $3
 
-# python "${SEGNET_TUTORIAL_DIR}"/Scripts/compute_bn_statistics.py "${SEGNET_TUTORIAL_DIR}"/Models/segnet_train.prototxt "${SEGNET_TUTORIAL_DIR}"/Models/Training/$1/$1_iter_$2.solverstate.caffemodel "${SEGNET_TUTORIAL_DIR}"/Models/Inference/$1
+python compute_bn_statistics.py --train_model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_train.prototxt --weights_dir "${SEGNET_TUTORIAL_DIR}"/Models/Training/$1 --out_dir "${SEGNET_TUTORIAL_DIR}"/Models/Inference/$1 --last_iter $2
 
 # python "${SEGNET_TUTORIAL_DIR}"/Scripts/test_segmentation_roads.py --model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_inference_train.prototxt --weights "${SEGNET_TUTORIAL_DIR}"/Models/Inference/test_weights.caffemodel --save_dir "${SEGNET_TUTORIAL_DIR}"/results3 --iter 377
 # 

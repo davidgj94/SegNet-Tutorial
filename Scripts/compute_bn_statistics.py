@@ -163,6 +163,7 @@ def make_parser_v2():
     p.add_argument('train_model')
     p.add_argument('weights_dir')
     p.add_argument('out_dir')
+    p.add_argument('last_iter', type=int, default=0)
     return p
 
 def create_weights(train_model, weights, out_dir):
@@ -193,6 +194,12 @@ def create_weights(train_model, weights, out_dir):
     print "done"
 
 
+def get_iter(glob):
+    ext = os.path.splitext(glob.parts[-1])[1]
+    format_string = 'iter_{:0>9}' + '.{}'.format(ext)
+    parsed = parse.parse(format_string, glob.parts[-1])
+    return int(parsed[0])
+
 if __name__ == '__main__':
     
     caffe.set_mode_gpu()
@@ -200,8 +207,10 @@ if __name__ == '__main__':
     args = p.parse_args()
     
     p = Path(args.weights_dir)
+    states = sorted(list(p.glob('*.caffemodel')), key=get_iter)
+    states = states[args.last_iter:]
     
-    for glob in p.glob('*.caffemodel'):
+    for state in states:
         iter_name = os.path.splitext(glob.parts[-1])[0]
         create_weights(args.train_model, os.path.join(args.weights_dir, .parts[-1]), os.path.join(args.out_dir, iter_name))
     
