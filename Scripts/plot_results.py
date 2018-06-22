@@ -9,7 +9,6 @@ def get_class_score(scores, idx):
 def plot_results_(acc, per_class_acc, per_class_iu):
     
     num_epochs = range(len(acc))
-    # Import arguments
     
     # Global accuracy
     plt.plot(num_epochs, acc)
@@ -55,8 +54,6 @@ def plot_results_vs(acc_train, acc_val, per_class_acc_train, per_class_acc_val, 
     plt.grid()
     plt.show()
     
-    
-    
     plt.plot(num_epochs, get_class_score(per_class_acc_train, 1))
     plt.plot(num_epochs, get_class_score(per_class_acc_val, 1))
     plt.title('Class 1 accuracy')
@@ -77,16 +74,6 @@ def plot_results_vs(acc_train, acc_val, per_class_acc_train, per_class_acc_val, 
     plt.legend(['train', 'val'])
     plt.grid()
     plt.show()
-    
-    ## Per-Class Iu
-    #plt.plot(num_epochs, get_class_score(per_class_iu, 0))
-    #plt.plot(num_epochs, get_class_score(per_class_iu, 1))
-    #plt.plot(num_epochs, get_class_score(per_class_iu, 2))
-    #plt.plot(num_epochs, get_class_score(per_class_iu, 3))
-    #plt.title('Per-Class Iu')
-    #plt.legend(['0', '1', '2', '3'])
-    #plt.grid()
-    #plt.show()
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--save_dir', type=str, default='')

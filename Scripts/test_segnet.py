@@ -21,16 +21,23 @@ def get_iter(glob):
     parsed = parse.parse(format_string, glob.parts[-1])
     return int(parsed[0])
 
+def select_iter(globs, iter_):
+    states = []
+    for glob in globs:
+        if get_iter(glob) == iter_:
+            states.append(glob)
+            break
+    return states
+
 # Import arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, required=True)
 parser.add_argument('--weights_dir', type=str, required=True)
 parser.add_argument('--models_dir', type=str, required=True)
+parser.add_argument('--iteration', type=int, default=None)
 parser.add_argument('--save_dir', type=str, required=True)
 parser.add_argument('--test_imgs', type=str, required=True)
 args = parser.parse_args()
-
-weights_dir = args.weights_dir
 
 results_path = os.path.join(args.save_dir,'results.p')
 if os.path.exists(results_path):
@@ -45,11 +52,15 @@ else:
     
 caffe.set_mode_gpu()
 
-
 p = Path(args.models_dir)
-states = sorted(list(p.glob('*.caffemodel')), key=get_iter)
-last_iter = len(acc)
-states = states[last_iter:]
+if args.iteration:
+    states = select_iter(p.glob('*.caffemodel'), args.iteration)
+else:
+    states = sorted(list(p.glob('*.caffemodel')), key=get_iter)
+    last_iter = len(acc)
+    states = states[last_iter:]
+
+pdb.set_trace()
 
 for state in states:
     
