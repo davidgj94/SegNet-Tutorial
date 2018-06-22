@@ -15,9 +15,8 @@ def print_label_freqs(split, label_freqs):
 def get_label_counts(label, num_classes):
     cls_count = np.zeros(num_classes)
     label_v = np.array(label).flatten()
-    num_cls = np.unique(label_v).size
 
-    for i in range(num_cls):
+    for i in range(num_classes):
         cls_count[i] = len(np.where(label_v==i)[0])
 
     return cls_count, np.sum(cls_count)

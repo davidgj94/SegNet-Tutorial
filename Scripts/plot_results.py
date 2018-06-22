@@ -1,23 +1,11 @@
 import os
 import matplotlib.pyplot as plt
 import pickle
+import argparse
 
 def get_class_score(scores, idx):
     return [el[idx] for el in scores]
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--save_dir', type=str, required=True)
-args = parser.parse_args()
-
-
-results_path = os.path.join(args.save_dir,'results.p')
-if os.path.exists(args.results_path):
-    with open(results_path, 'rb') as f:
-        hist, acc, per_class_acc, per_class_iu = pickle.load(f)
-        plot_results_(hist, acc, per_class_acc, per_class_iu)
-else:
-    print 'No hay resultados!!!'
-    
 def plot_results_(hist, acc, per_class_acc, per_class_iu):
     
     num_epochs = range(len(acc))
@@ -47,3 +35,17 @@ def plot_results_(hist, acc, per_class_acc, per_class_iu):
     plt.legend(['0', '1', '2', '3'])
     plt.grid()
     plt.show()
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--save_dir', type=str, required=True)
+args = parser.parse_args()
+
+
+results_path = os.path.join(args.save_dir,'results.p')
+if os.path.exists(results_path):
+    with open(results_path, 'rb') as f:
+        hist, acc, per_class_acc, per_class_iu = pickle.load(f)
+        plot_results_(hist, acc, per_class_acc, per_class_iu)
+else:
+    print 'No hay resultados!!!'
+    

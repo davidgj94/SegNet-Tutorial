@@ -7,6 +7,9 @@ import sys
 import caffe
 from caffe.proto import caffe_pb2
 from google.protobuf import text_format
+from pathlib import Path
+import parse
+import pdb
 
 
 def extract_dataset(net_message):
@@ -189,7 +192,7 @@ def create_weights(train_model, weights, out_dir):
 
 def get_iter(glob):
     ext = os.path.splitext(glob.parts[-1])[1]
-    format_string = 'iter_{:0>9}' + '.{}'.format(ext)
+    format_string = 'snapshot_iter_{:0>9}' + '{}'.format(ext)
     parsed = parse.parse(format_string, glob.parts[-1])
     return int(parsed[0])
 
@@ -201,6 +204,7 @@ if __name__ == '__main__':
     
     p = Path(args.weights_dir)
     states = sorted(list(p.glob('*.caffemodel')), key=get_iter)
+    #pdb.set_trace()
     states = states[args.last_iter:]
     
     for state in states:

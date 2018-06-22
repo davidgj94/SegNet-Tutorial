@@ -11,10 +11,13 @@ from PIL import Image
 from score_segnet import compute_hist, compute_confusion_matrix
 import pdb
 import caffe
+from pathlib import Path
+import parse
+import pickle
 
 def get_iter(glob):
     ext = os.path.splitext(glob.parts[-1])[1]
-    format_string = 'iter_{:0>9}' + '.{}'.format(ext)
+    format_string = 'snapshot_iter_{:0>9}' + '{}'.format(ext)
     parsed = parse.parse(format_string, glob.parts[-1])
     return int(parsed[0])
 
@@ -22,10 +25,12 @@ def get_iter(glob):
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, required=True)
 parser.add_argument('--weights_dir', type=str, required=True)
+parser.add_argument('--models_dir', type=str, required=True)
 parser.add_argument('--save_dir', type=str, required=True)
 parser.add_argument('--test_imgs', type=str, required=True)
-parser.add_argument('--last_iter', type=int, default=0)
 args = parser.parse_args()
+
+weights_dir = args.weights_dir
 
 results_path = os.path.join(args.save_dir,'results.p')
 if os.path.exists(results_path):
@@ -41,13 +46,16 @@ else:
 caffe.set_mode_gpu()
 
 
-p = Path(args.weights_dir)
+p = Path(args.models_dir)
 states = sorted(list(p.glob('*.caffemodel')), key=get_iter)
-states = states[args.last_iter:]
+last_iter = len(acc)
+states = states[last_iter:]
 
 for state in states:
     
-    net = caffe.Net(args.model, os.path.join(args.weights_dir, state.parts[-1]), caffe.TEST)
+    iter_name = os.path.splitext(state.parts[-1])[0]
+    
+    net = caffe.Net(args.model, os.path.join(args.weights_dir, iter_name, 'test_weights.caffemodel'), caffe.TEST)
 
     hist_, acc_, per_class_acc_, per_class_iu_ = compute_hist(net, args.test_imgs)
     
@@ -55,8 +63,6 @@ for state in states:
     acc.append(acc_)
     per_class_acc.append(per_class_acc_)
     per_class_iu.append(per_class_iu_)
-
-    iter_name = os.path.splitext(state.parts[-1])[0]
     
     print '----', iter_name, '----'
 
@@ -67,7 +73,6 @@ for state in states:
         
     for idx, class_iu in enumerate(per_class_iu_):
         print '>>>', 'Class {} iu:'.format(idx), class_iu
-    iu = np.diag(hist) / (hist.sum(1) + hist.sum(0) - np.diag(hist))
     
     with open(results_path, 'wb') as f:
         pickle.dump((hist, acc, per_class_acc, per_class_iu), f)
