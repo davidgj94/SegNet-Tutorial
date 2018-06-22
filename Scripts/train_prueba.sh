@@ -48,6 +48,6 @@ cd $WORK_DIR
 
 # FASE 4: Probamos en el test set los mejores parametros en validaciń y guardamos las imagenes blended
 
-# python test_segnet.py --model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_inference_test.prototxt --weights_dir "${SEGNET_TUTORIAL_DIR}"/Models/Inference/$1 --models_dir "${SEGNET_TUTORIAL_DIR}"/Models/Training/$1 --save_dir $RESULTS_DIR/$1/test --test_imgs "${ROADS_DIR}"/test --iteration $2
+python test_segnet.py --model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_inference_test.prototxt --weights_dir "${SEGNET_TUTORIAL_DIR}"/Models/Inference/$1 --models_dir "${SEGNET_TUTORIAL_DIR}"/Models/Training/$1 --save_dir $RESULTS_DIR/$1/test --test_imgs "${ROADS_DIR}"/test --iteration $2
 
 # python test_segmentation_roads.py --model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_inference_test.prototxt --weights "${SEGNET_TUTORIAL_DIR}"/Models/Inference/$1/snapshot_iter_$2/test_weights.caffemodel --save_dir $RESULTS_DIR/$1/test/blended/ --imgs_txt "${ROADS_DIR}"/test.txt

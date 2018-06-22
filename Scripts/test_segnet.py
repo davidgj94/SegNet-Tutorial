@@ -8,7 +8,7 @@ import pylab
 import vis
 import sys
 from PIL import Image
-from score_segnet import compute_hist, compute_confusion_matrix
+from score_segnet import compute_hist
 import pdb
 import caffe
 from pathlib import Path
@@ -60,9 +60,9 @@ else:
     last_iter = len(acc)
     states = states[last_iter:]
 
-pdb.set_trace()
 p = Path(args.test_imgs)
 num_iter = len(list(p.glob('*.png')))
+pdb.set_trace()
 
 for state in states:
     
@@ -92,6 +92,11 @@ for state in states:
         
     for idx, class_iu in enumerate(per_class_iu_):
         print '>>>', 'Class {} iu:'.format(idx), class_iu
+    
+    print '>>>','confusion matrix'
+    print hist_ / hist_.sum(1)[:, np.newaxis]
+    
+    pdb.set_trace()
     
     with open(results_path, 'wb') as f:
         pickle.dump((hist, acc, per_class_acc, per_class_iu), f)
