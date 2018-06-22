@@ -61,6 +61,8 @@ else:
     states = states[last_iter:]
 
 pdb.set_trace()
+p = Path(args.test_imgs)
+num_iter = len(list(p.glob('*.png')))
 
 for state in states:
     
@@ -68,12 +70,18 @@ for state in states:
     
     net = caffe.Net(args.model, os.path.join(args.weights_dir, iter_name, 'test_weights.caffemodel'), caffe.TEST)
 
-    hist_, acc_, per_class_acc_, per_class_iu_ = compute_hist(net, args.test_imgs)
+    hist_, acc_, per_class_acc_, per_class_iu_ = compute_hist(net, num_iter)
     
-    hist.append(hist_)
-    acc.append(acc_)
-    per_class_acc.append(per_class_acc_)
-    per_class_iu.append(per_class_iu_)
+    if args.iteration:
+        hist = hist_
+        acc = acc_
+        per_class_acc = per_class_acc_
+        per_class_iu = per_class_iu_
+    else:
+        hist.append(hist_)
+        acc.append(acc_)
+        per_class_acc.append(per_class_acc_)
+        per_class_iu.append(per_class_iu_)
     
     print '----', iter_name, '----'
 
