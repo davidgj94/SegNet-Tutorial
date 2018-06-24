@@ -62,7 +62,6 @@ else:
 
 p = Path(args.test_imgs)
 num_iter = len(list(p.glob('*.png')))
-pdb.set_trace()
 
 for state in states:
     
@@ -95,8 +94,6 @@ for state in states:
     
     print '>>>','confusion matrix'
     print hist_ / hist_.sum(1)[:, np.newaxis]
-    
-    pdb.set_trace()
     
     with open(results_path, 'wb') as f:
         pickle.dump((hist, acc, per_class_acc, per_class_iu), f)

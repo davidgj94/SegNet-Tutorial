@@ -6,8 +6,6 @@ import shutil
 from PIL import Image
 import argparse
 import vis
-caffe_root = '/home/david/projects/caffe-segnet-cudnn5/'
-sys.path.insert(0, caffe_root + 'python')
 import caffe
 
 tmp_dir = 'tmp/'
