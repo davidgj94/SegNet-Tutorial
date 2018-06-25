@@ -62,6 +62,7 @@ def crop_roads(crop_height, crop_step, indices, desc_txt, desc_image_dir, desc_l
 
 def make_parser():
     p = ArgumentParser()
+    p.add_argument('--exp_name', type=str, required=True)
     p.add_argument('--labeled_roads', type=str, required=True)
     p.add_argument('--crop_height', type=int, default=192)
     p.add_argument('--crop_step', type=int, default=100)
@@ -75,6 +76,14 @@ def make_parser():
 
 p = make_parser()
 args = p.parse_args()
+
+os.makedirs('../Models/Training/{}'.format(args.exp_name))
+os.makedirs('../Models/Inference/{}'.format(args.exp_name))
+os.makedirs('../results/{}'.format(args.exp_name))
+os.makedirs('../results/{}/train'.format(args.exp_name))
+os.makedirs('../results/{}/test'.format(args.exp_name))
+os.makedirs('../results/{}/test/blended'.format(args.exp_name))
+os.makedirs('../results/{}/val'.format(args.exp_name))
 
 png_images_dir = args.labeled_roads + 'PNGImages/'
 segmentation_class_raw_dir = args.labeled_roads + 'SegmentationClassRaw/'

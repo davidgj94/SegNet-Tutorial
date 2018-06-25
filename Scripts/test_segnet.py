@@ -54,7 +54,7 @@ caffe.set_mode_gpu()
 
 p = Path(args.models_dir)
 if args.iteration:
-    states = select_iter(p.glob('*.caffemodel'), args.iteration)
+    states = select_iter(p.glob('*.caffemodel'), int(args.iteration))
 else:
     states = sorted(list(p.glob('*.caffemodel')), key=get_iter)
     last_iter = len(acc)

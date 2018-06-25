@@ -33,7 +33,7 @@ skimage.io.imsave(newpath + "/mask.png",img)
 img_satellite = skimage.io.imread(new_satellite_url)
 skimage.io.imsave(newpath + "/sat.png",img_satellite)
 
-cmd = r'/usr/local/MATLAB/R2018a/bin/matlab -nosplash -nodesktop -r "road_segmentation {}; quit"'.format(newpath)
+cmd = r'/usr/local/MATLAB/R2017b/bin/matlab -nosplash -nodesktop -r "road_segmentation {}; quit"'.format(newpath)
 os.system(cmd)
 
 current_dir = Path()

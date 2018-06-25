@@ -5,7 +5,6 @@ import sys
 from datetime import datetime
 from PIL import Image
 import vis
-from sklearn.metrics import confusion_matrix
 import shutil
 from pathlib import Path
 import pdb

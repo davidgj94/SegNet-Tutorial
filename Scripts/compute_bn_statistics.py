@@ -11,6 +11,8 @@ from pathlib import Path
 import parse
 import pdb
 
+def get_subdirs(p):
+    return [x for x in p.iterdir() if x.is_dir()]
 
 def extract_dataset(net_message):
     assert net_message.layer[0].type == "DenseImageData"
@@ -159,7 +161,6 @@ def make_parser_v2():
     p.add_argument('--train_model')
     p.add_argument('--weights_dir')
     p.add_argument('--out_dir')
-    p.add_argument('--last_iter', type=int, default=0)
     return p
 
 def create_weights(train_model, weights, out_dir):
@@ -205,7 +206,9 @@ if __name__ == '__main__':
     p = Path(args.weights_dir)
     states = sorted(list(p.glob('*.caffemodel')), key=get_iter)
     #pdb.set_trace()
-    states = states[args.last_iter:]
+    last_iter = len(get_subdirs(Path(args.out_dir)))
+    states = states[last_iter:]
+    #pdb.set_trace()
     
     for state in states:
         iter_name = os.path.splitext(state.parts[-1])[0]
