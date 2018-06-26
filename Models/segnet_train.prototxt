@@ -1528,6 +1528,13 @@ layer {
   bottom: "label"
   top: "loss"
   softmax_param {engine: CAFFE}
+  loss_param: {
+    weight_by_label_freqs: true
+    class_weighting: 0.0245481074094
+    class_weighting: 4.12417382808
+    class_weighting: 0.665834329133
+    class_weighting: 2.007528636
+  }
 }
 layer {
   name: "accuracy"

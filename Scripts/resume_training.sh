@@ -24,6 +24,6 @@ python compute_bn_statistics.py --train_model "${SEGNET_TUTORIAL_DIR}"/Models/se
 
 python test_segnet.py --model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_inference_train.prototxt --weights_dir "${SEGNET_TUTORIAL_DIR}"/Models/Inference/"${exp_name}" --models_dir "${SEGNET_TUTORIAL_DIR}"/Models/Training/"${exp_name}" --save_dir $RESULTS_DIR/"${exp_name}"/train --test_imgs "${ROADS_DIR}"/train
 
-python plot_results.py --save_dir $RESULTS_DIR/"${exp_name}"/train
+python plot_results.py --save_dir $RESULTS_DIR/"${exp_name}"/train --results_dir $RESULTS_DIR/"${exp_name}"/train
 
 ############################################################################################################################################################################################################

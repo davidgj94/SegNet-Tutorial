@@ -19,6 +19,6 @@ exp_name=$1
 
 python test_segnet.py --model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_inference_val.prototxt --weights_dir "${SEGNET_TUTORIAL_DIR}"/Models/Inference/"${exp_name}" --models_dir "${SEGNET_TUTORIAL_DIR}"/Models/Training/"${exp_name}" --save_dir $RESULTS_DIR/"${exp_name}"/val --test_imgs "${ROADS_DIR}"/val
 
-python plot_results.py -vs --train_dir $RESULTS_DIR/"${exp_name}"/train --val_dir $RESULTS_DIR/"${exp_name}"/val
+python plot_results.py -vs --train_dir $RESULTS_DIR/"${exp_name}"/train --val_dir $RESULTS_DIR/"${exp_name}"/val --save_dir $RESULTS_DIR/"${exp_name}"/val
 
 ############################################################################################################################################################################################################

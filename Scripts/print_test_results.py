@@ -45,7 +45,7 @@ def plot_confusion_matrix(cm, classes,
 
 
 
-def print_test_results_(hist, acc, per_class_acc, per_class_iu, class_names):
+def print_test_results_(hist, acc, per_class_acc, per_class_iu, class_names, save_dir):
     
     print '>>>','overall accuracy', acc
 
@@ -60,16 +60,12 @@ def print_test_results_(hist, acc, per_class_acc, per_class_iu, class_names):
     
     plt.figure()
     plot_confusion_matrix(hist, class_names)
-    plt.savefig('../tmp/conf_matrix.png')
+    plt.savefig(os.path.join(save_dir,'conf_matrix.png'))
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--exp_name', type=str, required=True)
 args = parser.parse_args()
-
-if os.path.exists('../tmp'):
-    shutil.rmtree('../tmp', ignore_errors=True)
-os.makedirs('../tmp')
 
 results_path_test = '../results/{}/test/results.p'.format(args.exp_name)
 
@@ -77,7 +73,7 @@ if os.path.exists(results_path_test):
     with open(results_path_test, 'rb') as f:
         hist, acc, per_class_acc, per_class_iu = pickle.load(f)
         class_names = ['background', 'disconn', 'other', 'disconn-short']
-        print_test_results_(hist, acc, per_class_acc, per_class_iu, class_names)
+        print_test_results_(hist, acc, per_class_acc, per_class_iu, class_names, '../results/{}/test/')
 else:
     print 'No hay resultados!!!'
     

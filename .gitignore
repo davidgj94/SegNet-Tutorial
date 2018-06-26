@@ -5,4 +5,5 @@ results/
 *.caffemodel
 *.pyc
 *.png
+*.mat
 

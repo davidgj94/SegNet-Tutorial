@@ -22,4 +22,6 @@ python test_segnet.py --model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_inference_t
 
 python test_segmentation_roads.py --model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_inference_test.prototxt --weights "${SEGNET_TUTORIAL_DIR}"/Models/Inference/"${exp_name}"/snapshot_iter_"${iter}"/test_weights.caffemodel --save_dir $RESULTS_DIR/"${exp_name}"/test/blended/ --imgs_txt "${ROADS_DIR}"/test.txt
 
-############################################################################################################################################################################################################
+python print_test_results.py --exp_name $exp_name
+
+#######################################################################################################################################################################
