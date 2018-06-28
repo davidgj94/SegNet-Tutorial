@@ -6,6 +6,7 @@ import pickle
 import shutil
 import argparse
 import pdb
+import numpy as np
 
 def get_class_score(scores, idx):
     return [el[idx] for el in scores]
@@ -38,10 +39,17 @@ def plot_results_(acc, per_class_acc, per_class_iu, save_dir):
     plt.plot(num_epochs, get_class_score(per_class_iu, 1))
     plt.plot(num_epochs, get_class_score(per_class_iu, 2))
     plt.plot(num_epochs, get_class_score(per_class_iu, 3))
-    plt.title('Per-Class Iu')
+    plt.title('Per-Class IU')
     plt.legend(['0', '1', '2', '3'])
     plt.grid()
     plt.savefig(os.path.join(save_dir,'per_class_iu.png'))
+
+    # Mean Iu
+    plt.figure()
+    plt.plot(num_epochs, np.mean(per_class_iu, axis=1))
+    plt.title('Mean IU')
+    plt.grid()
+    plt.savefig(os.path.join(save_dir,'mean_iu.png'))
 
 def plot_results_vs(acc_train, acc_val, per_class_acc_train, per_class_acc_val, per_class_iu_train, per_class_iu_val, save_dir):
     
@@ -121,6 +129,15 @@ def plot_results_vs(acc_train, acc_val, per_class_acc_train, per_class_acc_val, 
     plt.legend(['train', 'val'])
     plt.grid()
     plt.savefig(os.path.join(save_dir, 'per_class_iu_3.png'))
+
+    # Mean iu
+    plt.figure()
+    plt.plot(num_epochs, np.mean(per_class_iu_train, axis=1))
+    plt.plot(num_epochs, np.mean(per_class_iu_val, axis=1))
+    plt.title('Mean IU')
+    plt.legend(['train', 'val'])
+    plt.grid()
+    plt.savefig(os.path.join(save_dir, 'mean_iu.png'))
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--results_dir', type=str, default='')
