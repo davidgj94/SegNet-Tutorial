@@ -34,11 +34,9 @@ esac
 
 exp_name=$2
 
-#python create_exp_dirs.py --exp_name "${exp_name}"
+python create_exp_dirs.py --exp_name "${exp_name}"
 
 ./change_snapshot_prefix.sh "${PROTOTXT_DIR}" "${exp_name}"
-
-exit 1
 
 "${CAFFE_DIR}"/caffe train -gpu 0 -solver "${PROTOTXT_DIR}"/solver.prototxt -weights "${SEGNET_TUTORIAL_DIR}"/segnet_pascal.caffemodel
 

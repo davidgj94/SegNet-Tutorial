@@ -1,5 +1,6 @@
 import os
 from argparse import ArgumentParser
+import shutil
 
 def make_parser():
     p = ArgumentParser()
@@ -8,6 +9,15 @@ def make_parser():
 
 p = make_parser()
 args = p.parse_args()
+
+if os.path.exists('../Models/Training/{}'.format(args.exp_name)):
+    shutil.rmtree('../Models/Training/{}'.format(args.exp_name), ignore_errors=True)
+    
+if os.path.exists('../Models/Inference/{}'.format(args.exp_name)):
+    shutil.rmtree('../Models/Inference/{}'.format(args.exp_name), ignore_errors=True)
+    
+if os.path.exists('../results/{}'.format(args.exp_name)):
+    shutil.rmtree('../results/{}'.format(args.exp_name), ignore_errors=True)
 
 os.makedirs('../Models/Training/{}'.format(args.exp_name))
 os.makedirs('../Models/Inference/{}'.format(args.exp_name))

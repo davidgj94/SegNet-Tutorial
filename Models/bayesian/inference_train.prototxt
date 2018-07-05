@@ -6,7 +6,7 @@ layer {
   top: "label"
   dense_image_data_param {
     source: "/home/davidgj/projects_v2/SegNet-Tutorial/roads/ROADS/train.txt" # Change this to the absolute path to your data file
-    batch_size: 4			# Change this to be the number of Monte Carlo Dropout samples you wish to make
+    batch_size: 6			# Change this to be the number of Monte Carlo Dropout samples you wish to make
   }
 }
 layer {
