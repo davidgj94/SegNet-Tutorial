@@ -10,56 +10,85 @@ layer {
     shuffle: true
   }
 }
-layer{
+layer {
   name: "spatial_data"
-  type: "ImageData"
+  type: "Python"
   top: "pos_x"
   top: "pos_y"
-  include {
-    phase: TRAIN
-  }
-  image_data_param {
-    source: "/home/davidgj/projects_v2/SegNet-Tutorial/roads/ROADS/train-dummy.txt"
+  python_param {
+    module: "load_xy"
+    layer: "XYLayer"
+    param_str: "{\'xy_dir\': \'..\'}"
   }
 }
 layer {
-  name: "scaleX"
-  type: "Scale"
+  name: "concat"
   bottom: "pos_x"
-  top: "pos_x"
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
-  param {
-    lr_mult: 0
-    decay_mult: 0
-  }
-  scale_param {
-    filler {
-      value: 0.0039  
-    }
-    bias_term: false
+  bottom: "pos_y"
+  top: "pos_xy"
+  type: "Concat"
+  concat_param {
+    axis: 1
   }
 }
 layer {
-  name: "scaleY"
-  type: "Scale"
-  bottom: "pos_y"
-  top: "pos_y"
+  bottom: "pos_xy"
+  top: "conv1_xy"
+  name: "conv1_xy"
+  type: "Convolution"
   param {
-    lr_mult: 0
-    decay_mult: 0
+    lr_mult: 1
+    decay_mult: 1
   }
   param {
-    lr_mult: 0
+    lr_mult: 2
     decay_mult: 0
   }
-  scale_param {
-    filler {
-      value: 0.0052   
+  convolution_param {
+    weight_filler {
+      type: "gaussian" 
+      std: 0.01
     }
-    bias_term: false
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    num_output: 20
+    pad: 0
+    kernel_size: 1
+  }
+}
+layer {
+  bottom: "conv1_xy"
+  top: "conv1_xy"
+  name: "relu1_xy"
+  type: "ReLU"
+}
+layer {
+  bottom: "conv1_xy"
+  top: "spatial_prior"
+  name: "spatial_prior"
+  type: "Convolution"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    weight_filler {
+      type: "gaussian" 
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    num_output: 4
+    pad: 0
+    kernel_size: 1
   }
 }
 layer {
@@ -1549,17 +1578,6 @@ layer {
   type: "ReLU"
 }
 layer {
-  name: "concat"
-  bottom: "conv1_2_D"
-  bottom: "pos_x"
-  bottom: "pos_y"
-  top: "conv1_2_D"
-  type: "Concat"
-  concat_param {
-    axis: 1
-  }
-}
-layer {
   bottom: "conv1_2_D"
   top: "conv1_1_D"
   name: "conv1_1_D_roads"
@@ -1582,6 +1600,16 @@ layer {
     num_output: 4
     pad: 1
     kernel_size: 3
+  }
+}
+layer {
+  name: "sum_priors"
+  type: "Eltwise"
+  bottom: "conv1_1_D"
+  bottom: "spatial_prior"
+  top: "conv1_1_D"
+  eltwise_param {
+    operation: SUM
   }
 }
 layer {
