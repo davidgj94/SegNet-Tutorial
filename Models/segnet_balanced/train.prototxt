@@ -13,22 +13,11 @@ layer {
 layer {
   name: "spatial_data"
   type: "Python"
-  top: "pos_x"
-  top: "pos_y"
+  top: "pos_xy"
   python_param {
     module: "load_xy"
     layer: "XYLayer"
-    param_str: "{\'xy_dir\': \'..\'}"
-  }
-}
-layer {
-  name: "concat"
-  bottom: "pos_x"
-  bottom: "pos_y"
-  top: "pos_xy"
-  type: "Concat"
-  concat_param {
-    axis: 1
+    param_str: "{\'xy_dir\': \'..\', \'batchsize\': \'5\'}"
   }
 }
 layer {

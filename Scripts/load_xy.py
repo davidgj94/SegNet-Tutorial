@@ -37,65 +37,45 @@ class XYLayer(caffe.Layer):
         """
         # config
         params = eval(self.param_str)
-        self.xy_dir = params['xy_dir']
+        xy_dir = params['xy_dir']
+        batchsize = int(params['batchsize'])
         if 'alfa' in params:
-            self.alfa = double(params['alfa'])
+            alfa = float(params['alfa'])
         else:
-            self.alfa = 1.0
+            alfa = 1.0
 
         # two tops: data and label
-        if len(top) != 2:
-            raise Exception("Need to define two tops: X and Y.")
+        if len(top) != 1:
+            raise Exception("Need to define one top: XY.")
         # data layers have no bottoms
         if len(bottom) != 0:
             raise Exception("Do not define a bottom.")
+        
+        X = Image.open('{}/{}.png'.format(xy_dir,'X'))
+        X = np.array(X, dtype=np.float32)
+        X = (X / 255) * alfa
+        
+        Y = Image.open('{}/{}.png'.format(xy_dir,'Y'))
+        Y = np.array(Y, dtype=np.float32)
+        Y = (Y / 192) * alfa
+        
+        XY = np.dstack((X,Y))
+        XY = XY.transpose((2,0,1))
+        
+        self.batch = np.zeros((batchsize, 2, 192, 256))
+        for idx in range(batchsize):
+            self.batch[idx,:,:,:] = XY
 
 
     def reshape(self, bottom, top):
-        # load image + label image pair
-        
-        self.X = self.load_X()
-        self.Y = self.load_Y()
         # reshape tops to fit (leading 1 is for batch dimension)
-        top[0].reshape(1, *self.X.shape)
-        top[1].reshape(1, *self.Y.shape)
+        top[0].reshape(*self.batch.shape)
 
 
     def forward(self, bottom, top):
         # assign output
-        top[0].data[...] = self.X
-        top[1].data[...] = self.Y
+        top[0].data[...] = self.batch
 
 
     def backward(self, top, propagate_down, bottom):
         pass
-
-
-    def load_X(self):
-        """
-        Load input image and preprocess for Caffe:
-        - cast to float
-        - switch channels RGB -> BGR
-        - subtract mean
-        - transpose to channel x height x width order
-        """
-        im = Image.open('{}/{}.png'.format(self.xy_dir,'X'))
-        im = np.array(im, dtype=np.float32)
-        im = (im / 255) / self.alfa
-        im = im[..., np.newaxis]
-        im = im.transpose((2,0,1))
-        return im
-
-
-    def load_Y(self):
-        """
-        Load label image as 1 x height x width integer array of label indices.
-        The leading singleton dimension is required by the loss.
-        """
-        im = Image.open('{}/{}.png'.format(self.xy_dir,'X'))
-        im = np.array(im, dtype=np.float32)
-        im = (im / 191) / self.alfa
-        im = im[..., np.newaxis]
-        im = im.transpose((2,0,1))
-        return im
-
