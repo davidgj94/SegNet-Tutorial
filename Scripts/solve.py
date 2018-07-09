@@ -9,6 +9,7 @@ import time
 from pathlib import Path
 import parse
 from argparse import ArgumentParser
+import numpy
 
 try:
     import setproctitle
@@ -18,9 +19,18 @@ except:
     
 def make_parser():
     p = ArgumentParser()
-    p.add_argument('--solver')
-    p.add_argument('--weights')
+    p.add_argument('--solver', type=str)
+    p.add_argument('--weights', type=str)
+    p.add_argument('--niter', type=int, default=170)
+    p.add_argument('--nepoch', type=int, default=5)
+    p.add_argument('--snapshot_dir', type=str)
     return p
+
+def get_iter(glob):
+    ext = os.path.splitext(glob.parts[-1])[1]
+    format_string = 'snapshot_iter_{:0>9}' + '{}'.format(ext)
+    parsed = parse.parse(format_string, glob.parts[-1])
+    return int(parsed[0])
 
 # init
 p = make_parser()
@@ -29,10 +39,14 @@ args = p.parse_args()
 caffe.set_mode_gpu()
 
 solver = caffe.SGDSolver(args.solver)
-solver.net.copy_from(args.weights)
 
-niter = 170
-nepoch = 5
+path = Path(args.snapshot_dir)
+states = sorted(list(path.glob('*.solverstate')), key=get_iter)
 
-for epoch in range(nepoch):
-    solver.step(niter)
+if states:
+    solver.restore('/'.join(states[-1].parts))
+else:
+    solver.net.copy_from(args.weights)
+
+for epoch in range(args.nepoch):
+    solver.step(args.niter)

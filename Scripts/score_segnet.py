@@ -22,6 +22,7 @@ def compute_hist(net, num_iter, layer='prob', gt='label'):
     for i in range(num_iter):
         
         net.forward()
+        pdb.set_trace()
         img_hist = fast_hist(net.blobs[gt].data[0, 0].flatten(),
                                 net.blobs[layer].data[0].argmax(0).flatten(),
                                 n_cl)

@@ -1,10 +1,34 @@
-
-ROOT_DIR=/home/david/projects
+WORK_DIR=$(pwd)
+cd ..
+cd ..
+ROOT_DIR=$(pwd)
 SEGNET_TUTORIAL_DIR="${ROOT_DIR}"/SegNet-Tutorial
-CAFFE_DIR="${ROOT_DIR}"/caffe-segnet-cudnn5/build/tools"
+CAFFE_DIR="${ROOT_DIR}"/caffe-segnet-cudnn5/build/tools
+PYCAFFE_DIR="${ROOT_DIR}"/caffe-segnet-cudnn5/python
+ROADS_DIR="${SEGNET_TUTORIAL_DIR}"/roads/ROADS
+RESULTS_DIR="${SEGNET_TUTORIAL_DIR}"/results
+MODELS_DIR="${SEGNET_TUTORIAL_DIR}"/Models
+PROTOTXT_DIR="${MODELS_DIR}"/$1
 
-./"${CAFFE_DIR}"/caffe train -gpu 0 -solver "${SEGNET_TUTORIAL_DIR}"/Models/segnet_solver.prototxt -weights ${SEGNET_TUTORIAL_DIR}/segnet_pascal.caffemodel
+exp_name=$2
 
-# python "${SEGNET_TUTORIAL_DIR}"/Scripts/compute_bn_statistics.py "${SEGNET_TUTORIAL_DIR}"/Models/segnet_train.prototxt "${SEGNET_TUTORIAL_DIR}"/Models/Training/segnet_iter_10000.caffemodel "${SEGNET_TUTORIAL_DIR}"/Models/Inference/
-# 
-# python "${SEGNET_TUTORIAL_DIR}"/Scripts/test_segmentation_roads.py --model "${SEGNET_TUTORIAL_DIR}"/Models/segnet_inference.prototxt --weights "${SEGNET_TUTORIAL_DIR}"/Models/Inference/test_weights.caffemodel 
+mkdir -p "${MODELS_DIR}"/Training/"${exp_name}"
+mkdir -p "${MODELS_DIR}"/Inference/"${exp_name}"
+mkdir -p "${RESULTS_DIR}"/"${exp_name}"/train
+mkdir -p "${RESULTS_DIR}"/"${exp_name}"/test
+mkdir -p "${RESULTS_DIR}"/"${exp_name}"/val
+
+cd $WORK_DIR
+
+./change_snapshot_prefix.sh "${PROTOTXT_DIR}" "${exp_name}"
+
+export PYTHONPATH=$PYTHONPATH:$PYCAFFE_DIR:$WORK_DIR
+
+python solve.py --solver "${PROTOTXT_DIR}"/solver.prototxt --weights "${SEGNET_TUTORIAL_DIR}"/segnet_pascal.caffemodel --snapshot_dir "${MODELS_DIR}"/Training/"${exp_name}"
+
+python compute_bn_statistics.py --train_model "${PROTOTXT_DIR}"/train.prototxt --weights_dir "${SEGNET_TUTORIAL_DIR}"/Models/Training/"${exp_name}" --out_dir "${SEGNET_TUTORIAL_DIR}"/Models/Inference/"${exp_name}"
+
+python test_segnet.py --model "${PROTOTXT_DIR}"/inference_train.prototxt --weights_dir "${SEGNET_TUTORIAL_DIR}"/Models/Inference/"${exp_name}" --models_dir "${SEGNET_TUTORIAL_DIR}"/Models/Training/"${exp_name}" --save_dir $RESULTS_DIR/"${exp_name}"/train --test_imgs "${ROADS_DIR}"/train
+
+python plot_results.py --save_dir $RESULTS_DIR/"${exp_name}"/train --results_dir $RESULTS_DIR/"${exp_name}"/train
+
