@@ -11,6 +11,8 @@ MODELS_DIR="${SEGNET_TUTORIAL_DIR}"/Models
 PROTOTXT_DIR="${MODELS_DIR}"/$1
 
 exp_name=$2
+num_epochs=$3
+
 
 mkdir -p "${MODELS_DIR}"/Training/"${exp_name}"
 mkdir -p "${MODELS_DIR}"/Inference/"${exp_name}"
@@ -24,7 +26,7 @@ cd $WORK_DIR
 
 export PYTHONPATH=$PYTHONPATH:$PYCAFFE_DIR:$WORK_DIR
 
-python solve.py --solver "${PROTOTXT_DIR}"/solver.prototxt --weights "${SEGNET_TUTORIAL_DIR}"/segnet_pascal.caffemodel --snapshot_dir "${MODELS_DIR}"/Training/"${exp_name}"
+python solve.py --solver "${PROTOTXT_DIR}"/solver.prototxt --weights "${SEGNET_TUTORIAL_DIR}"/segnet_pascal.caffemodel --snapshot_dir "${MODELS_DIR}"/Training/"${exp_name}" --nepoch $num_epochs
 
 python compute_bn_statistics.py --train_model "${PROTOTXT_DIR}"/train.prototxt --weights_dir "${SEGNET_TUTORIAL_DIR}"/Models/Training/"${exp_name}" --out_dir "${SEGNET_TUTORIAL_DIR}"/Models/Inference/"${exp_name}"
 

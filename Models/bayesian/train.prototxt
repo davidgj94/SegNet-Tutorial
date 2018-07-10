@@ -5,7 +5,7 @@ layer {
   top: "data"
   top: "label"
   dense_image_data_param {
-    source: "/home/davidgj/projects_v2/SegNet-Tutorial/roads/ROADS/train.txt" # Change this to the absolute path to your data file
+    source: "/home/davidgj/projects_v2/SegNet-Tutorial/roads/ROADS/train.txt"	# Change this to the absolute path to your data file
     batch_size: 5   			# Change this number to a batch size that will fit on your GPU
     shuffle: true
   }
@@ -1609,10 +1609,10 @@ layer {
   softmax_param {engine: CAFFE}
   loss_param: {
     weight_by_label_freqs: true
-    class_weighting: 0.024133828261804022
-    class_weighting: 4.048013413361528
-    class_weighting: 0.6382269530798105
-    class_weighting: 2.308619769370546
+    class_weighting: 0.0245481074094
+    class_weighting: 4.12417382808
+    class_weighting: 0.665834329133
+    class_weighting: 2.007528636
   }
 }
 layer {

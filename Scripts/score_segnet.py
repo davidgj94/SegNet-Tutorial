@@ -22,10 +22,18 @@ def compute_hist(net, num_iter, layer='prob', gt='label'):
     for i in range(num_iter):
         
         net.forward()
-        pdb.set_trace()
-        img_hist = fast_hist(net.blobs[gt].data[0, 0].flatten(),
-                                net.blobs[layer].data[0].argmax(0).flatten(),
-                                n_cl)
+
+        predicted = np.squeeze(net.blobs[layer].data)
+        ground_truth = np.squeeze(net.blobs[gt].data)
+
+        if len(predicted.shape) == 4:
+            output = np.mean(predicted,axis=0)
+            ind = np.argmax(output, axis=0)
+            ground_truth = ground_truth[0]
+        else:
+            ind = np.argmax(predicted, axis=0)
+
+        img_hist = fast_hist(ground_truth.flatten(), ind.flatten(), n_cl)
         hist += img_hist
             
     acc = np.diag(hist).sum() / hist.sum()
