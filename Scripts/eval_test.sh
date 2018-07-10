@@ -23,4 +23,4 @@ mkdir -p $RESULTS_DIR/"${exp_name}"/test/blended_"${iter}"/
 
 python test_segmentation_roads.py --model "${PROTOTXT_DIR}"/inference_test.prototxt --weights "${SEGNET_TUTORIAL_DIR}"/Models/Inference/"${exp_name}"/snapshot_iter_"${iter}"/test_weights.caffemodel --save_dir $RESULTS_DIR/"${exp_name}"/test/blended_"${iter}"/ --imgs_txt "${ROADS_DIR}"/test.txt
 
-python print_test_results.py --exp_name $exp_name
+python print_test_results.py --exp_name $exp_name --iteration $iter

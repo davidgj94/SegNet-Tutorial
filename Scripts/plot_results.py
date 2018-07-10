@@ -152,7 +152,6 @@ if args.vs:
     if args.train_dir and args.val_dir:
         results_path_train = os.path.join(args.train_dir,'results.p')
         results_path_val = os.path.join(args.val_dir,'results.p')
-        pdb.set_trace()
         if os.path.exists(results_path_train) and os.path.exists(results_path_val):
             with open(results_path_train, 'rb') as f:
                 _, acc_train, per_class_acc_train, per_class_iu_train = pickle.load(f)
