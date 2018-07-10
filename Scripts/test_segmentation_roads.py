@@ -8,7 +8,7 @@ import pylab
 import vis
 import sys
 from PIL import Image
-import caffe
+import caffe; caffe.set_mode_gpu()
 import pdb
 
 # Import arguments
@@ -19,16 +19,12 @@ parser.add_argument('--imgs_txt', type=str, required=True)
 parser.add_argument('--save_dir', type=str, required=True)
 args = parser.parse_args()
 
-caffe.set_mode_gpu()
-
 net = caffe.Net(args.model,
                 args.weights,
                 caffe.TEST)
 
 test_txt = np.loadtxt(args.imgs_txt, dtype=str)
 test_names = [os.path.basename(img_path) for img_path in test_txt[:,1]]
-aa = args.save_dir
-pdb.set_trace()
 
 for img_name in test_names:
 

@@ -7,38 +7,22 @@ CAFFE_DIR="${ROOT_DIR}"/caffe-segnet-cudnn5/build/tools
 PYCAFFE_DIR="${ROOT_DIR}"/caffe-segnet-cudnn5/python
 ROADS_DIR="${SEGNET_TUTORIAL_DIR}"/roads/ROADS
 RESULTS_DIR="${SEGNET_TUTORIAL_DIR}"/results
-export PYTHONPATH=$PYTHONPATH:$PYCAFFE_DIR:$WORK_DIR
-cd $WORK_DIR
-
-
-############################################################################################################################################################################################################
-
-# FASE 1: Empezamos a entrenar, calculamos bn statistics, probamos en el train set y visualizamos
-
-option=$1
-case ${option} in 
-   -by) 
-		PROTOTXT_DIR="${SEGNET_TUTORIAL_DIR}"/Models/bayesian
-		;; 
-   -s) 
-		PROTOTXT_DIR="${SEGNET_TUTORIAL_DIR}"/Models/segnet
-		;; 
-   -ba) 
-		PROTOTXT_DIR="${SEGNET_TUTORIAL_DIR}"/Models/segnet_balanced
-		;; 
-   *)  
-      	echo "`basename ${0}`:usage: [-by bayesian segnet] | [-s segnet] [-ba balanced segnet]" 
-      	exit 1 # Command to come out of the program with status 1
-      	;; 
-esac
+MODELS_DIR="${SEGNET_TUTORIAL_DIR}"/Models
+PROTOTXT_DIR="${MODELS_DIR}"/$1
 
 exp_name=$2
 
-python create_exp_dirs.py --exp_name "${exp_name}"
+mkdir -p "${MODELS_DIR}"/Training/"${exp_name}"
+mkdir -p "${MODELS_DIR}"/Inference/"${exp_name}"
+mkdir -p "${RESULTS_DIR}"/"${exp_name}"/train
+mkdir -p "${RESULTS_DIR}"/"${exp_name}"/test
+mkdir -p "${RESULTS_DIR}"/"${exp_name}"/val
+
+cd $WORK_DIR
 
 ./change_snapshot_prefix.sh "${PROTOTXT_DIR}" "${exp_name}"
 
-#"${CAFFE_DIR}"/caffe train -gpu 0 -solver "${PROTOTXT_DIR}"/solver.prototxt -weights "${SEGNET_TUTORIAL_DIR}"/segnet_pascal.caffemodel
+export PYTHONPATH=$PYTHONPATH:$PYCAFFE_DIR:$WORK_DIR
 
 python solve.py --solver "${PROTOTXT_DIR}"/solver.prototxt --weights "${SEGNET_TUTORIAL_DIR}"/segnet_pascal.caffemodel
 
@@ -48,4 +32,3 @@ python test_segnet.py --model "${PROTOTXT_DIR}"/inference_train.prototxt --weigh
 
 python plot_results.py --save_dir $RESULTS_DIR/"${exp_name}"/train --results_dir $RESULTS_DIR/"${exp_name}"/train
 
-############################################################################################################################################################################################################

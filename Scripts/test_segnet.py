@@ -10,7 +10,7 @@ import sys
 from PIL import Image
 from score_segnet import compute_hist
 import pdb
-import caffe
+import caffe; caffe.set_mode_gpu()
 from pathlib import Path
 import parse
 import pickle
@@ -39,29 +39,32 @@ parser.add_argument('--save_dir', type=str, required=True)
 parser.add_argument('--test_imgs', type=str, required=True)
 args = parser.parse_args()
 
-results_path = os.path.join(args.save_dir,'results.p')
-if os.path.exists(results_path):
-    with open(results_path, 'rb') as f:
-        hist, acc, per_class_acc, per_class_iu = pickle.load(f)
-else:
+p = Path(args.models_dir)
+
+if args.iteration:
+    results_path = os.path.join(args.save_dir,'results_{}.p'.format(args.iteration))
     hist = []
     acc = []
     per_class_acc = []
     per_class_iu = []
-    
-    
-caffe.set_mode_gpu()
-
-p = Path(args.models_dir)
-if args.iteration:
     states = select_iter(p.glob('*.caffemodel'), int(args.iteration))
 else:
+    results_path = os.path.join(args.save_dir,'results.p')
+    
+    if os.path.exists(results_path):
+        with open(results_path, 'rb') as f:
+            hist, acc, per_class_acc, per_class_iu = pickle.load(f)
+    else:
+        hist = []
+        acc = []
+        per_class_acc = []
+        per_class_iu = []
+        
     states = sorted(list(p.glob('*.caffemodel')), key=get_iter)
     last_iter = len(acc)
     states = states[last_iter:]
-
-p = Path(args.test_imgs)
-num_iter = len(list(p.glob('*.png')))
+        
+num_iter = len(list(Path(args.test_imgs).glob('*.png')))
 
 for state in states:
     
@@ -70,17 +73,13 @@ for state in states:
     net = caffe.Net(args.model, os.path.join(args.weights_dir, iter_name, 'test_weights.caffemodel'), caffe.TEST)
 
     hist_, acc_, per_class_acc_, per_class_iu_ = compute_hist(net, num_iter)
+   
+    hist.append(hist_)
+    acc.append(acc_)
+    per_class_acc.append(per_class_acc_)
+    per_class_iu.append(per_class_iu_)
     
-    if args.iteration:
-        hist = hist_
-        acc = acc_
-        per_class_acc = per_class_acc_
-        per_class_iu = per_class_iu_
-    else:
-        hist.append(hist_)
-        acc.append(acc_)
-        per_class_acc.append(per_class_acc_)
-        per_class_iu.append(per_class_iu_)
+    # Print results
     
     print '----', iter_name, '----'
 
@@ -94,6 +93,8 @@ for state in states:
     
     print '>>>','confusion matrix'
     print hist_ / hist_.sum(1)[:, np.newaxis]
+    
+    # Save results    
     
     with open(results_path, 'wb') as f:
         pickle.dump((hist, acc, per_class_acc, per_class_iu), f)
