@@ -13,6 +13,8 @@ PROTOTXT_DIR="${MODELS_DIR}"/$1
 exp_name=$2
 iter=$3
 
+mkdir -p "${RESULTS_DIR}"/"${exp_name}"/test
+
 cd $WORK_DIR
 
 export PYTHONPATH=$PYTHONPATH:$PYCAFFE_DIR
