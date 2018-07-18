@@ -10,6 +10,7 @@ from pathlib import Path
 import parse
 from argparse import ArgumentParser
 import numpy
+import scipy.io
 
 try:
     import setproctitle
@@ -47,6 +48,11 @@ if states:
     solver.restore('/'.join(states[-1].parts))
 else:
     solver.net.copy_from(args.weights)
+    mat = scipy.io.loadmat('../roads/ROADS/priors.mat')
+    solver.net.params['scale-layer-0'][0].data[...] = mat['prior_0_norm']
+    solver.net.params['scale-layer-1'][0].data[...] = mat['prior_1_norm']
+    solver.net.params['scale-layer-2'][0].data[...] = mat['prior_2_norm']
+    solver.net.params['scale-layer-3'][0].data[...] = mat['prior_3_norm']
 
 for epoch in range(args.nepoch):
     solver.step(args.niter)

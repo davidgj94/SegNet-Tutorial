@@ -13,12 +13,9 @@ PROTOTXT_DIR="${MODELS_DIR}"/$1
 exp_name=$2
 num_epochs=$3
 
-
 mkdir -p "${MODELS_DIR}"/Training/"${exp_name}"
 mkdir -p "${MODELS_DIR}"/Inference/"${exp_name}"
 mkdir -p "${RESULTS_DIR}"/"${exp_name}"/train
-mkdir -p "${RESULTS_DIR}"/"${exp_name}"/test
-mkdir -p "${RESULTS_DIR}"/"${exp_name}"/val
 
 cd $WORK_DIR
 
