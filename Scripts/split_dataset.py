@@ -23,9 +23,9 @@ def get_label_counts(label, num_classes):
     return cls_count, np.sum(cls_count)
     
     
-def crop_roads(crop_height, crop_step, indices, desc_txt, desc_image_dir, desc_label_dir):
+def crop_roads(crop_height, crop_step, indices, desc_txt, desc_image_dir, desc_label_dir, num_clasess):
     
-    label_counts = np.zeros(4)
+    label_counts = np.zeros(num_clasess)
     num_pixels = 0
    
     for img_name in indices:
@@ -67,7 +67,29 @@ def make_parser():
     p.add_argument('--crop_step', type=int, default=100)
     p.add_argument('--train_split', type=float, required=True)
     p.add_argument('--val_split', type=float, required=True)
+    p.add_argument('--save_dir', type=str, required=True)
+    p.add_argument('--num_classes', type=int)
     return p
+
+def split_indices(args, indices):
+
+    train_size = int(args.train_split * len(indices))
+    val_size = int(args.val_split * len(indices))
+    test_size = len(indices) - (train_size + val_size)
+
+    train_indices = indices[:train_size]
+    label_freqs_train = crop_roads(args.crop_height, args.crop_step, train_indices, 'train.txt', train_dir, trainannot_dir, args.num_classes)
+    print_label_freqs('train', label_freqs_train)
+
+    if(val_size > 0):
+        val_indices = indices[train_size:(train_size + val_size)]
+        label_freqs_val = crop_roads(args.crop_height, args.crop_step, val_indices, 'val.txt', val_dir, valannot_dir, args.num_classes)
+        print_label_freqs('val', label_freqs_val)
+
+    if(test_size > 0):
+        test_indices = indices[(train_size + val_size):]
+        label_freqs_test = crop_roads(args.crop_height, args.crop_step, test_indices, 'test.txt', test_dir, testannot_dir, args.num_classes)
+        print_label_freqs('test', label_freqs_test)
 
 #labeled_roads = sys.argv[1]
 #crop_height = int(sys.argv[2])
@@ -79,7 +101,7 @@ args = p.parse_args()
 png_images_dir = args.labeled_roads + 'PNGImages/'
 segmentation_class_raw_dir = args.labeled_roads + 'SegmentationClassRaw/'
 
-_dataset_dir = '../roads/'
+_dataset_dir = '../{}/'.format(args.save_dir)
 dataset_dir = _dataset_dir + 'ROADS/'
 val_dir = dataset_dir + 'val/'
 valannot_dir = dataset_dir + 'valannot/'
@@ -104,25 +126,14 @@ os.mknod(dataset_dir + 'test.txt')
 
 p = Path(png_images_dir)
 indices = [glob.parts[-1] for glob in p.glob('*.png')]
+arrow_indices = np.loadtxt('arrow.txt', dtype='str').tolist()
+pdb.set_trace()
+indices = list(set(indices) - set(arrow_indices))
 random.shuffle(indices)
+random.shuffle(arrow_indices)
+pdb.set_trace()
 
-#train_split = 0.65
-#val_split = 0.1
-train_size = int(args.train_split * len(indices))
-val_size = int(args.val_split * len(indices))
-test_size = len(indices) - (train_size + val_size)
 
-train_indices = indices[:train_size]
-label_freqs_train = crop_roads(args.crop_height, args.crop_step, train_indices, 'train.txt', train_dir, trainannot_dir)
-print_label_freqs('train', label_freqs_train)
-
-if(val_size > 0):
-    val_indices = indices[train_size:(train_size + val_size)]
-    label_freqs_val = crop_roads(args.crop_height, args.crop_step, val_indices, 'val.txt', val_dir, valannot_dir)
-    print_label_freqs('val', label_freqs_val)
-
-if(test_size > 0):
-    test_indices = indices[(train_size + val_size):]
-    label_freqs_test = crop_roads(args.crop_height, args.crop_step, test_indices, 'test.txt', test_dir, testannot_dir)
-    print_label_freqs('test', label_freqs_test)
+split_indices(args, indices)
+split_indices(args, arrow_indices)
 

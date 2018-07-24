@@ -17,6 +17,7 @@ parser.add_argument('--model', type=str, required=True)
 parser.add_argument('--weights', type=str, required=True)
 parser.add_argument('--imgs_txt', type=str, required=True)
 parser.add_argument('--save_dir', type=str, required=True)
+parser.add_argument('--num_classes', type=str, required=True)
 args = parser.parse_args()
 
 net = caffe.Net(args.model,
@@ -40,5 +41,5 @@ for img_name in test_names:
 	image = np.transpose(image, (1,2,0))
 	image = image[:,:,(2,1,0)]
 	
-	vis_img = Image.fromarray(vis.vis_seg(image, ind, vis.make_palette(4)))
+	vis_img = Image.fromarray(vis.vis_seg(image, ind, vis.make_palette(int(args.num_classes))))
 	vis_img.save(os.path.join(args.save_dir, img_name))
