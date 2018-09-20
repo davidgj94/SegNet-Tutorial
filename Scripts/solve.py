@@ -41,18 +41,19 @@ caffe.set_mode_gpu()
 
 solver = caffe.SGDSolver(args.solver)
 
-path = Path(args.snapshot_dir)
-states = sorted(list(path.glob('*.solverstate')), key=get_iter)
+# path = Path(args.snapshot_dir)
+# states = sorted(list(path.glob('*.solverstate')), key=get_iter)
 
-if states:
-    solver.restore('/'.join(states[-1].parts))
-else:
-    solver.net.copy_from(args.weights)
-    # mat = scipy.io.loadmat('../roads/ROADS/priors.mat')
-    # solver.net.params['scale-layer-0'][0].data[...] = mat['prior_0_norm']
-    # solver.net.params['scale-layer-1'][0].data[...] = mat['prior_1_norm']
-    # solver.net.params['scale-layer-2'][0].data[...] = mat['prior_2_norm']
-    # solver.net.params['scale-layer-3'][0].data[...] = mat['prior_3_norm']
+# if states:
+#     solver.restore('/'.join(states[-1].parts))
+# else:
+#     solver.net.copy_from(args.weights)
+#     # mat = scipy.io.loadmat('../roads/ROADS/priors.mat')
+#     # solver.net.params['scale-layer-0'][0].data[...] = mat['prior_0_norm']
+#     # solver.net.params['scale-layer-1'][0].data[...] = mat['prior_1_norm']
+#     # solver.net.params['scale-layer-2'][0].data[...] = mat['prior_2_norm']
+#     # solver.net.params['scale-layer-3'][0].data[...] = mat['prior_3_norm']
 
+solver.net.copy_from(args.weights)
 for epoch in range(args.nepoch):
     solver.step(args.niter)
