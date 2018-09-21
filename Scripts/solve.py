@@ -11,6 +11,8 @@ import parse
 from argparse import ArgumentParser
 import numpy
 import scipy.io
+from segnet_utils import get_iter, get_subdirs
+from compute_bn_statistics import create_weights
 
 try:
     import setproctitle
@@ -21,39 +23,50 @@ except:
 def make_parser():
     p = ArgumentParser()
     p.add_argument('--solver', type=str)
+    p.add_argument('--train_model', type=str)
     p.add_argument('--weights', type=str)
-    p.add_argument('--niter', type=int, default=170)
-    p.add_argument('--nepoch', type=int, default=5)
-    p.add_argument('--snapshot_dir', type=str)
+    p.add_argument('--niter', type=int)
+    p.add_argument('--nepoch', type=int)
+    p.add_argument('--training_dir', type=str)
+    p.add_argument('--inference_dir', type=str)
     return p
 
-def get_iter(glob):
-    ext = os.path.splitext(glob.parts[-1])[1]
-    format_string = 'snapshot_iter_{:0>9}' + '{}'.format(ext)
-    parsed = parse.parse(format_string, glob.parts[-1])
-    return int(parsed[0])
+def get_states(training_dir):
+    p = Path(training_dir)
+    states = sorted(list(p.glob('*.solverstate')), key=get_iter)
+    return states
 
-# init
-p = make_parser()
-args = p.parse_args()
+def get_new_models(training_dir, inference_dir):
+    p = Path(training_dir)
+    models = sorted(list(p.glob('*.caffemodel')), key=get_iter)
+    last_iter = len(get_subdirs(Path(inference_dir)))
+    models = models[last_iter:]
+    return models
 
-caffe.set_mode_gpu()
+if __name__ == '__main__':
 
-solver = caffe.SGDSolver(args.solver)
+    # # init
+    p = make_parser()
+    args = p.parse_args()
 
-# path = Path(args.snapshot_dir)
-# states = sorted(list(path.glob('*.solverstate')), key=get_iter)
+    caffe.set_mode_gpu()
 
-# if states:
-#     solver.restore('/'.join(states[-1].parts))
-# else:
-#     solver.net.copy_from(args.weights)
-#     # mat = scipy.io.loadmat('../roads/ROADS/priors.mat')
-#     # solver.net.params['scale-layer-0'][0].data[...] = mat['prior_0_norm']
-#     # solver.net.params['scale-layer-1'][0].data[...] = mat['prior_1_norm']
-#     # solver.net.params['scale-layer-2'][0].data[...] = mat['prior_2_norm']
-#     # solver.net.params['scale-layer-3'][0].data[...] = mat['prior_3_norm']
+    solver = caffe.SGDSolver(args.solver)
 
-solver.net.copy_from(args.weights)
-for epoch in range(args.nepoch):
-    solver.step(args.niter)
+    states = get_states(args.training_dir)
+
+    if states:
+        solver.restore('/'.join(states[-1].parts))
+    else:
+        solver.net.copy_from(args.weights)
+
+    for epoch in range(args.nepoch):
+        solver.step(args.niter)
+
+    del solver
+    
+    models = get_new_models(args.training_dir, args.inference_dir)
+
+    for model in models:
+        iter_name = os.path.splitext(model.parts[-1])[0]
+        create_weights(args.train_model, os.path.join(args.training_dir, model.parts[-1]), os.path.join(args.inference_dir, iter_name))
