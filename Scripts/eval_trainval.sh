@@ -30,15 +30,15 @@ python eval_trainval.py \
 	--save_dir "${RESULTS_DIR}"/"${exp_name}"/train \
 	--test_imgs "${DATA_DIR}"/train
 	
-python eval_trainval.py \
-	--inference_model "${PROTOTXT_DIR}"/inference_val.prototxt \
-	--inference_dir "${INFERENCE_DIR}" \
-	--training_dir "${TRAINING_DIR}" \
-	--save_dir "${RESULTS_DIR}"/"${exp_name}"/val \
-	--test_imgs "${DATA_DIR}"/val
-
-python plot_trainval.py \
-	--train_results "${RESULTS_DIR}"/"${exp_name}"/train \
-	--val_results "${RESULTS_DIR}"/"${exp_name}"/val \
-	--save_dir "${RESULTS_DIR}"/"${exp_name}"/trainval
+# python eval_trainval.py \
+# 	--inference_model "${PROTOTXT_DIR}"/inference_val.prototxt \
+# 	--inference_dir "${INFERENCE_DIR}" \
+# 	--training_dir "${TRAINING_DIR}" \
+# 	--save_dir "${RESULTS_DIR}"/"${exp_name}"/val \
+# 	--test_imgs "${DATA_DIR}"/val
+# 
+# python plot_trainval.py \
+# 	--train_results "${RESULTS_DIR}"/"${exp_name}"/train \
+# 	--val_results "${RESULTS_DIR}"/"${exp_name}"/val \
+# 	--save_dir "${RESULTS_DIR}"/"${exp_name}"/trainval
 	

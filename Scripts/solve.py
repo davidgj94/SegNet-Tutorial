@@ -13,6 +13,7 @@ import numpy
 import scipy.io
 from segnet_utils import get_iter, get_subdirs
 from compute_bn_statistics import create_weights
+import pdb
 
 try:
     import setproctitle
@@ -64,6 +65,8 @@ if __name__ == '__main__':
         solver.step(args.niter)
 
     del solver
+    
+    pdb.set_trace()
     
     models = get_new_models(args.training_dir, args.inference_dir)
 

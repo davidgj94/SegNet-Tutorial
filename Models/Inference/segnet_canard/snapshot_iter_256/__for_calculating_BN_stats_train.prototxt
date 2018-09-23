@@ -5,8 +5,8 @@ layer {
   top: "data"
   top: "label"
   dense_image_data_param {
-    source: "/home/david/projects/SegNet-Tutorial/roads/ROADS/train.txt"
-    batch_size: 5
+    source: "/home/davidgj/projects_v2/SegNet-Tutorial/canard/train.txt"
+    batch_size: 1
     shuffle: true
   }
 }
@@ -57,7 +57,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -114,7 +114,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -183,7 +183,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -240,7 +240,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -309,7 +309,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -366,7 +366,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -423,7 +423,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -492,7 +492,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -549,7 +549,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -606,7 +606,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -675,7 +675,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -732,7 +732,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -789,7 +789,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -868,7 +868,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -925,7 +925,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -982,7 +982,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1049,7 +1049,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1106,7 +1106,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1163,7 +1163,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1230,7 +1230,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1287,7 +1287,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1344,7 +1344,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1411,7 +1411,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1468,7 +1468,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1535,7 +1535,7 @@ layer {
     }
     shift_filler {
       type: "constant"
-      value: 0.0010000000475
+      value: 0.001
     }
   }
 }
@@ -1559,7 +1559,7 @@ layer {
     decay_mult: 0.0
   }
   convolution_param {
-    num_output: 4
+    num_output: 2
     pad: 1
     kernel_size: 3
     weight_filler {
@@ -1576,6 +1576,11 @@ layer {
   bottom: "conv1_1_D"
   bottom: "label"
   top: "loss"
+  loss_param {
+    weight_by_label_freqs: true
+    class_weighting: 0.503609645148
+    class_weighting: 69.7588855072
+  }
   softmax_param {
     engine: CAFFE
   }

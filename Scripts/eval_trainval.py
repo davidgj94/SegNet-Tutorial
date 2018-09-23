@@ -48,14 +48,17 @@ if __name__ == '__main__':
 	    per_class_acc = []
 	    per_class_iu = []
 	    
-	num_test_imgs = len(list(Path(args.test_imgs).glob('*.png')))
+	num_test_imgs = len(list(Path(args.test_imgs).glob('*')))
 	iter_names = get_iter_names(args.training_dir, len(acc))
+	pdb.set_trace()
 
 	for iter_name in iter_names:
 	    
 	    net = caffe.Net(args.inference_model, os.path.join(args.inference_dir, iter_name, 'test_weights.caffemodel'), caffe.TEST)
 
 	    hist_, acc_, per_class_acc_, per_class_iu_ = compute_hist(net, num_test_imgs)
+	    
+	    pdb.set_trace()
 	   
 	    hist.append(hist_)
 	    acc.append(acc_)

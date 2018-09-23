@@ -18,22 +18,23 @@ from segnet_utils import get_iter
 from segnet_plots import plot_confusion_matrix
 
 def select_iter(globs, iter_):
-	model = None
+    model = None
     for glob in globs:
         if get_iter(glob) == iter_:
-        	model = glob
+            model = glob
             break
     return os.path.splitext(model.parts[-1])[0]
 
 def make_parser():
-	parser = argparse.ArgumentParser()
-	parser.add_argument('--inference_model', type=str, required=True)
-	parser.add_argument('--iteration', type=int, required=True)
-	parser.add_argument('--inference_dir', type=str, required=True)
-	parser.add_argument('--training_dir', type=str, required=True)
-	parser.add_argument('--save_dir', type=str, required=True)
-	parser.add_argument('--test_imgs', type=str, required=True)
-	return parser
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--inference_model', type=str, required=True)
+    parser.add_argument('--iteration', type=int, required=True)
+    parser.add_argument('--inference_dir', type=str, required=True)
+    parser.add_argument('--training_dir', type=str, required=True)
+    parser.add_argument('--save_dir', type=str, required=True)
+    parser.add_argument('--test_imgs', type=str, required=True)
+    return parser
 
 def print_test_results_(acc, per_class_acc, per_class_iu):
     
@@ -47,18 +48,18 @@ def print_test_results_(acc, per_class_acc, per_class_iu):
     
 
 if __name__ == '__main__':
-
-	args = parser.parse_args()
-
-	results_path = os.path.join(args.save_dir,'results_{}.p'.format(args.iteration))
-
-	iter_name = select_iter(Path(args.training_dir).glob('*.caffemodel'), args.iteration)
-	net = caffe.Net(args.inference_model, os.path.join(args.inference_dir, iter_name, 'test_weights.caffemodel'), caffe.TEST)
-
-	num_test_imgs = len(list(Path(args.test_imgs).glob('*.png')))
-	hist, acc, per_class_acc, per_class_iu = compute_hist(net, num_test_imgs)
-
-	# Save results    
+    
+    parser = make_parser()
+    args = parser.parse_args()
+    
+    results_path = os.path.join(args.save_dir,'results_{}.p'.format(args.iteration))
+    
+    iter_name = select_iter(Path(args.training_dir).glob('*.caffemodel'), args.iteration)
+    net = caffe.Net(args.inference_model, os.path.join(args.inference_dir, iter_name, 'test_weights.caffemodel'), caffe.TEST)
+    
+    num_test_imgs = len(list(Path(args.test_imgs).glob('*')))
+    hist, acc, per_class_acc, per_class_iu = compute_hist(net, num_test_imgs)
+    # Save results    
     
     with open(results_path, 'wb') as f:
         pickle.dump((hist, acc, per_class_acc, per_class_iu), f)
