@@ -36,7 +36,7 @@ def make_parser():
     parser.add_argument('--test_imgs', type=str, required=True)
     return parser
 
-def print_test_results_(acc, per_class_acc, per_class_iu):
+def print_test_results(acc, per_class_acc, per_class_iu):
     
     print '>>>','overall accuracy', acc
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     with open(results_path, 'wb') as f:
         pickle.dump((hist, acc, per_class_acc, per_class_iu), f)
 
-    plot_confusion_matrix(hist, ['background', 'edge'])
+    plot_confusion_matrix(hist, ['background', 'edge'], os.path.join(args.save_dir,'conf_matrix_{}.png'.format(args.iteration)))
 
     # Print results
 

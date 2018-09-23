@@ -6,6 +6,7 @@ import pickle
 import shutil
 import argparse
 import pdb
+import itertools
 import numpy as np
 
 def get_class_score(scores, idx):
@@ -100,7 +101,7 @@ def plot_results_vs(acc_train, acc_val, per_class_acc_train, per_class_acc_val, 
     plt.savefig(os.path.join(save_dir, 'mean_iu.png'))
 
 
-def plot_confusion_matrix(cm, classes,
+def plot_confusion_matrix(cm, classes, save_path,
                           normalize=True,
                           title='Confusion matrix',
                           cmap=plt.cm.Blues):
@@ -134,3 +135,5 @@ def plot_confusion_matrix(cm, classes,
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
+    plt.savefig(save_path)
+    
