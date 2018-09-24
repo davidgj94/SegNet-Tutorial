@@ -7,7 +7,7 @@ print(cv2.__version__)
 
 class VideoReader:
     
-    def __init__(self, video_path, fps):
+    def __init__(self, video_path, fps=1):
         self.vidcap = cv2.VideoCapture(video_path)
         self.count = 0
         self.delay_msec = int(1000 * (1 / fps))
@@ -37,16 +37,20 @@ def crop_imgs(img, crop_width=1024, crop_height=1080, border=(0,4)):
 
     return np.array(img_batch)
 
-def get_full_mask(masks, h=2, w=4, border=(0, 4)):
+def get_full_mask(masks, w=4, h=2, border=(0, 4)):
 
     num_masks = masks.shape[0]
     crop_width = masks.shape[2] - 2 * border[0]
     crop_height = masks.shape[1] - 2 * border[1]
-    masks_ = np.zeros((num_masks, crop_height, crop_width))
-
-    for i in range(num_masks):
-        masks_[i,:,:] = masks[i,border[1]:border[1]+crop_height,border[0]:border[0]+crop_width]
-
-    full_mask = masks_.transpose(2,0,1).reshape(h * crop_height, w * crop_width)
-
+    masks_ = masks[:,border[1]:border[1]+crop_height,border[0]:border[0]+crop_width]
+    
+    full_mask = np.zeros((crop_height * h, crop_width * w))
+    n = 0
+    for j in np.arange(w):
+        
+        for i in np.arange(h):
+            
+            full_mask[i*crop_height:(i+1)*crop_height, j*crop_width:(j+1)*crop_width] = masks_[n]
+            n = n + 1
+    
     return full_mask
