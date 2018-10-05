@@ -1,3 +1,4 @@
+from segnet_plots import plot_results
 import numpy as np
 import os.path
 import json
@@ -14,7 +15,6 @@ from pathlib import Path
 import parse
 import pickle
 from segnet_utils import get_iter
-from segnet_plots import plot_results
 
 def make_parser():
 	parser = argparse.ArgumentParser()
@@ -23,6 +23,7 @@ def make_parser():
 	parser.add_argument('--training_dir', type=str, required=True)
 	parser.add_argument('--save_dir', type=str, required=True)
 	parser.add_argument('--test_imgs', type=str, required=True)
+	parser.add_argument('--num_classes', type=int, required=True)
 	return parser
 
 def get_iter_names(training_dir, last_iter):
@@ -50,15 +51,12 @@ if __name__ == '__main__':
 	    
 	num_test_imgs = len(list(Path(args.test_imgs).glob('*')))
 	iter_names = get_iter_names(args.training_dir, len(acc))
-	pdb.set_trace()
 
 	for iter_name in iter_names:
 	    
 	    net = caffe.Net(args.inference_model, os.path.join(args.inference_dir, iter_name, 'test_weights.caffemodel'), caffe.TEST)
 
 	    hist_, acc_, per_class_acc_, per_class_iu_ = compute_hist(net, num_test_imgs)
-	    
-	    pdb.set_trace()
 	   
 	    hist.append(hist_)
 	    acc.append(acc_)
@@ -70,4 +68,4 @@ if __name__ == '__main__':
 	with open(results_path, 'wb') as f:
 	    pickle.dump((hist, acc, per_class_acc, per_class_iu), f)
 
-	plot_results(acc, per_class_acc, per_class_iu, ['background', 'edges'] , args.save_dir)
+	plot_results(acc, per_class_acc, per_class_iu, [str(i) for i in range(args.num_classes)] , args.save_dir)

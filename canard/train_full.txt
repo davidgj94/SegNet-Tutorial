@@ -1,0 +1,16 @@
+../canard/train_old/img_0020.png ../canard/trainannot_old/img_0020.png
+../canard/train_old/img_0033.png ../canard/trainannot_old/img_0033.png
+../canard/train_old/img_0012.png ../canard/trainannot_old/img_0012.png
+../canard/train_old/img_0005.png ../canard/trainannot_old/img_0005.png
+../canard/train_old/img_0027.png ../canard/trainannot_old/img_0027.png
+../canard/train_old/img_0025.png ../canard/trainannot_old/img_0025.png
+../canard/train_old/img_0011.png ../canard/trainannot_old/img_0011.png
+../canard/train_old/img_0032.png ../canard/trainannot_old/img_0032.png
+../canard/train_old/img_0010.png ../canard/trainannot_old/img_0010.png
+../canard/train_old/img_0001.png ../canard/trainannot_old/img_0001.png
+../canard/train_old/img_0026.png ../canard/trainannot_old/img_0026.png
+../canard/train_old/img_0029.png ../canard/trainannot_old/img_0029.png
+../canard/train_old/img_0028.png ../canard/trainannot_old/img_0028.png
+../canard/train_old/img_0002.png ../canard/trainannot_old/img_0002.png
+../canard/train_old/img_0021.png ../canard/trainannot_old/img_0021.png
+../canard/train_old/img_0009.png ../canard/trainannot_old/img_0009.png

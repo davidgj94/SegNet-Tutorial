@@ -1,5 +1,6 @@
 dataset=$1
 exp_name=$2
+num_classes=$3
 
 WORK_DIR=$(pwd)
 cd ..
@@ -28,7 +29,9 @@ python eval_trainval.py \
 	--inference_dir "${INFERENCE_DIR}" \
 	--training_dir "${TRAINING_DIR}" \
 	--save_dir "${RESULTS_DIR}"/"${exp_name}"/train \
-	--test_imgs "${DATA_DIR}"/train
+	--test_imgs "${DATA_DIR}"/train \
+	--num_classes $num_classes
+	
 	
 # python eval_trainval.py \
 # 	--inference_model "${PROTOTXT_DIR}"/inference_val.prototxt \

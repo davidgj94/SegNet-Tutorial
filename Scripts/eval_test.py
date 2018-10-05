@@ -1,3 +1,4 @@
+from segnet_plots import plot_confusion_matrix
 import numpy as np
 import os.path
 import json
@@ -15,7 +16,6 @@ from pathlib import Path
 import parse
 import pickle
 from segnet_utils import get_iter
-from segnet_plots import plot_confusion_matrix
 
 def select_iter(globs, iter_):
     model = None

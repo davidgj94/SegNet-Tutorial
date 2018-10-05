@@ -66,8 +66,6 @@ if __name__ == '__main__':
 
     del solver
     
-    pdb.set_trace()
-    
     models = get_new_models(args.training_dir, args.inference_dir)
 
     for model in models:
