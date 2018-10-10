@@ -1,0 +1,4 @@
+../canard_v2/train/img_0029.png ../canard_v2/trainannot/img_0029.png
+../canard_v2/train/img_0001.png ../canard_v2/trainannot/img_0001.png
+../canard_v2/train/img_0025.png ../canard_v2/trainannot/img_0025.png
+../canard_v2/train/img_0010.png ../canard_v2/trainannot/img_0010.png
