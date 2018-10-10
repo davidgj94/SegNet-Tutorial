@@ -1,5 +1,5 @@
 *.caffemodel
-roads/
+data/
 results/
 *.solverstate
 *.caffemodel
