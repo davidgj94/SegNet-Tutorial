@@ -1,9 +1,11 @@
 *.caffemodel
 data/
 results/
+Models/Training/
+Models/Inference/
 *.solverstate
 *.caffemodel
 *.pyc
 *.png
 *.mat
-
+*.orig

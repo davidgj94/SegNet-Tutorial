@@ -5,7 +5,7 @@ layer {
   top: "data"
   top: "label"
   dense_image_data_param {
-    source: "/home/davidgj/projects_v2/SegNet-Tutorial/canard_v2/train.txt"
+    source: "/home/davidgj/projects_v2/SegNet-Tutorial/data/canard_down_1000/train.txt"
     batch_size: 1
     shuffle: true
     mirror: true
@@ -1560,7 +1560,7 @@ layer {
     decay_mult: 0.0
   }
   convolution_param {
-    num_output: 2
+    num_output: 3
     pad: 1
     kernel_size: 3
     weight_filler {
@@ -1579,8 +1579,9 @@ layer {
   top: "loss"
   loss_param {
     weight_by_label_freqs: true
-    class_weighting: 0.511568279679
-    class_weighting: 22.1108191477
+    class_weighting: 0.135760750487
+    class_weighting: 2.33585506456
+    class_weighting: 1.0
   }
   softmax_param {
     engine: CAFFE

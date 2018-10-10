@@ -6,12 +6,13 @@ img_dir = sys.argv[1]
 label_dir = sys.argv[2]
 txt_name = sys.argv[3]
 
-os.mknod(txt_name)
+txt_path = os.path.join(str(Path(label_dir).parent), txt_name)
+os.mknod(txt_path)
 
-p = Path(img_dir)
+p = Path(label_dir)
 for glob in p.glob('*'):
 
-	img_name = glob.parts[-1]
-
-	with open(txt_name, 'a') as txt:
-		txt.write('../canard/{}/{}'.format(img_dir, img_name) + ' ' + '../canard/{}/{}'.format(label_dir, img_name) + '\n')
+    img_name = glob.parts[-1]
+    
+    with open(txt_path, 'a') as txt:
+    	txt.write(os.path.join(img_dir, img_name) + ' ' + os.path.join(label_dir, img_name) + '\n')

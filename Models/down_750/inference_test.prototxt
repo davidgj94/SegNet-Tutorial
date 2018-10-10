@@ -5,7 +5,7 @@ layer {
   top: "data"
   top: "label"
   dense_image_data_param {
-    source: "/home/davidgj/projects_v2/SegNet-Tutorial/data/canard_down_1000/train.txt"	# Change this to the absolute path to your data file
+    source: "/home/davidgj/projects_v2/SegNet-Tutorial/data/canard_down_750/test.txt"	# Change this to the absolute path to your data file
     batch_size: 1
   }
 }

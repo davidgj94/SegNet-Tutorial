@@ -5,7 +5,7 @@ layer {
   top: "data"
   top: "label"
   dense_image_data_param {
-    source: "/home/davidgj/projects_v2/SegNet-Tutorial/canard_v2/train.txt"	# Change this to the absolute path to your data file
+    source: "/home/davidgj/projects_v2/SegNet-Tutorial/data/canard_down_1000/train.txt"	# Change this to the absolute path to your data file
     batch_size: 1 			# Change this number to a batch size that will fit on your GPU
     shuffle: true
     mirror: true
@@ -1517,7 +1517,7 @@ layer {
     bias_filler {
       type: "constant"
     }
-    num_output: 2
+    num_output: 3
     pad: 1
     kernel_size: 3
   }
@@ -1531,8 +1531,9 @@ layer {
   softmax_param {engine: CAFFE}
   loss_param: {
     weight_by_label_freqs: true
-    class_weighting: 0.5115682796793183
-    class_weighting: 22.110819147720782
+    class_weighting: 0.13576075048742134
+    class_weighting: 2.3358550645561977
+    class_weighting: 1.0
   }
 }
 layer {

@@ -10,7 +10,7 @@ cd $WORK_DIR
 SEGNET_TUTORIAL_DIR="${ROOT_DIR}"/SegNet-Tutorial
 CAFFE_DIR="${ROOT_DIR}"/caffe-segnet-cudnn5/build/tools
 PYCAFFE_DIR="${ROOT_DIR}"/caffe-segnet-cudnn5/python
-DATA_DIR="${SEGNET_TUTORIAL_DIR}"/"${dataset}"
+DATA_DIR="${SEGNET_TUTORIAL_DIR}"/data/"${dataset}"
 RESULTS_DIR="${SEGNET_TUTORIAL_DIR}"/results
 MODELS_DIR="${SEGNET_TUTORIAL_DIR}"/Models
 PROTOTXT_DIR="${MODELS_DIR}"/"${exp_name}"
@@ -29,7 +29,7 @@ python eval_trainval.py \
 	--inference_dir "${INFERENCE_DIR}" \
 	--training_dir "${TRAINING_DIR}" \
 	--save_dir "${RESULTS_DIR}"/"${exp_name}"/train \
-	--test_imgs "${DATA_DIR}"/train \
+	--test_imgs "${DATA_DIR}"/trainannot \
 	--num_classes $num_classes
 	
 	
