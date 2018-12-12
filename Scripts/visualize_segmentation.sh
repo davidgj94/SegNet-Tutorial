@@ -1,6 +1,5 @@
 dataset=$1
 exp_name=$2
-iter=$3
 num_classes=$4
 
 WORK_DIR=$(pwd)
@@ -23,21 +22,13 @@ mkdir -p "${RESULTS_DIR}"/"${exp_name}"/test/blended_"${iter}"
 
 
 export PYTHONPATH=$PYTHONPATH:$PYCAFFE_DIR:$WORK_DIR
-
-#python eval_test.py \
-#	--inference_model "${PROTOTXT_DIR}"/inference_test.prototxt \
-#	--iteration $iter \
-#	--inference_dir "${INFERENCE_DIR}" \
-#	--training_dir "${TRAINING_DIR}" \
-#	--save_dir "${RESULTS_DIR}"/"${exp_name}"/test \
-#	--test_imgs "${DATA_DIR}"/testannot
 	
 
 python visualize_segmentation.py \
     --model "${PROTOTXT_DIR}"/inference_test.prototxt \
-    --weights "${INFERENCE_DIR}"/snapshot_iter_"${iter}"/test_weights.caffemodel \
+    --weights "${INFERENCE_DIR}"/test_weights.caffemodel \
     --imgs_txt "${DATA_DIR}"/test.txt \
-    --save_dir "${RESULTS_DIR}"/"${exp_name}"/test/blended_"${iter}" \
-    --num_classes $num_classes
+	--save_dir "${RESULTS_DIR}"/"${exp_name}"
+	--num_classes $num_classes
 	
 	

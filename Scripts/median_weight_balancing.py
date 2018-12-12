@@ -6,7 +6,7 @@ import pdb
 from argparse import ArgumentParser
 
 
-def get_label_freqs(indices, num_classes):
+def get_label_freqs(indices, num_classes, ignore_label=255):
 
     classPixelCount = np.zeros(num_classes)
     classTotalCount = np.zeros(num_classes)
@@ -14,6 +14,7 @@ def get_label_freqs(indices, num_classes):
     for idx in indices:
         
         label = np.array(Image.open(idx)).flatten()
+	label = label[label != ignore_label]
         perImageFrequencies = np.bincount(label, minlength=num_classes)
         classPixelCount += perImageFrequencies
         nPixelsInImage = len(label)
